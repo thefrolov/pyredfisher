@@ -1,0 +1,22 @@
+# rackfish Development Dependencies
+
+# Core dependencies (also in pyproject.toml)
+requests>=2.25.0
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-mock>=3.10.0
+
+# Code quality
+black>=23.0.0
+ruff>=0.1.0
+mypy>=1.0.0
+
+# Building and publishing
+build>=0.10.0
+twine>=4.0.0
+
+# Documentation (optional)
+mkdocs>=1.5.0
+mkdocs-material>=9.0.0
