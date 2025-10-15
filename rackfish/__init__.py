@@ -19,7 +19,7 @@ https://github.com/thefrolov/rackfish
 
 from .client import RedfishClient, RedfishError, RedfishResource
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __author__ = "Dmitrii Frolov"
 __email__ = "thefrolov@mts.ru"
 __license__ = "MIT"
