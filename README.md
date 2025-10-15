@@ -293,7 +293,7 @@ See LICENSE file.
 
 ## Version
 
-Current version: 1.0.2
+Current version: 1.0.3
 
 ## Requirements
 

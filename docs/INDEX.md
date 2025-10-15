@@ -240,7 +240,7 @@ See [../.github/copilot-instructions.md](../.github/copilot-instructions.md) for
 
 **Last Updated:** October 15, 2025
 
-**Version:** 1.0.2
+**Version:** 1.0.3
 
 **Supported Python:** 3.8+
 
