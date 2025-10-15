@@ -5,13 +5,15 @@ Complete documentation for the rackfish dynamic Redfish client library.
 ## 📚 Documentation Files
 
 ### Getting Started
-- **[README.md](README.md)** - Main documentation, installation, quick start, and overview
+
+- **[../README.md](../README.md)** - Main documentation, installation, quick start, and overview
   - Features and benefits
   - Quick start examples
   - Architecture overview
   - Supported vendors
 
 ### Usage Examples
+
 - **[EXAMPLES.md](EXAMPLES.md)** - Comprehensive code examples for 150+ Redfish operations
   - User management (create, delete, update)
   - Storage and logical drives
@@ -31,13 +33,32 @@ Complete documentation for the rackfish dynamic Redfish client library.
   - Maps original function names to rackfish patterns
 
 ### Advanced Topics
+
 - **[OEM_LINKS_SURFACING.md](OEM_LINKS_SURFACING.md)** - Details on automatic OEM and Links surfacing
   - How vendor extensions are surfaced
   - Collision avoidance mechanism
   - Before/after code comparisons
   - Benefits and backward compatibility
 
+- **[SINGULAR_COLLECTION_ACCESS.md](SINGULAR_COLLECTION_ACCESS.md)** - Singular access to single-member collections
+  - Convenient `client.System` instead of `next(iter(client.Systems))`
+  - Works for any collection with exactly one member
+  - Best practices and error handling
+  - Usage examples and limitations
+
+- **[ETAG_SUPPORT.md](ETAG_SUPPORT.md)** - ETag support for PATCH requests
+  - Automatic If-Match header inclusion
+  - Prevents HTTP 412 errors
+  - Usage examples and troubleshooting
+
+- **[SSL_CONFIGURATION.md](SSL_CONFIGURATION.md)** - SSL/TLS configuration guide
+  - Secure vs insecure connections
+  - Self-signed certificate handling
+  - Custom CA bundles
+  - Best practices and troubleshooting
+
 ### Testing
+
 - **[TESTS.md](TESTS.md)** - Test suite documentation
   - How to run tests
   - Test coverage overview
@@ -45,26 +66,42 @@ Complete documentation for the rackfish dynamic Redfish client library.
 
 ## 🧪 Test Files
 
-- **[test_common_usage.py](test_common_usage.py)** - Tests for common Redfish operations
+Located in `../tests/`:
+
+- **test_common_usage.py** - Tests for common Redfish operations
   - Resource traversal and collection iteration
   - OEM/Links surfacing
   - Action invocation
   - PATCH updates
   - Create/delete operations
 
-- **[test_oem_links_surfacing.py](test_oem_links_surfacing.py)** - Tests for OEM and Links surfacing
+- **test_oem_links_surfacing.py** - Tests for OEM and Links surfacing
   - OEM property surfacing (Huawei, Dell vendors)
   - Links resource surfacing (Chassis, ManagedBy)
   - Collision avoidance
   - OEM action binding
 
-- **[test_recursion_fix.py](test_recursion_fix.py)** - Tests for recursion guard
+- **test_recursion_fix.py** - Tests for recursion guard
   - 50-level deep nested structure handling
   - Lazy loading verification
 
+- **test_etag_support.py** - Tests for ETag functionality
+  - ETag extraction and usage
+  - PATCH with If-Match header
+  - Backward compatibility
+
+- **test_singular_collection_access.py** - Tests for singular collection access
+  - Single member access (success cases)
+  - Multiple members (error handling)
+  - Empty collections (error handling)
+  - Nested collections support
+  - Client-level and resource-level access
+
 ## 💻 Example Files
 
-- **[examples_comprehensive.py](examples_comprehensive.py)** - Full working examples
+Located in `../examples/`:
+
+- **examples_comprehensive.py** - Full working examples
   - Real-world usage patterns
   - User management
   - Power control
@@ -77,18 +114,20 @@ Complete documentation for the rackfish dynamic Redfish client library.
   - LDAP configuration
   - (Most write operations commented out for safety)
 
-- **[demo_surfacing_comprehensive.py](demo_surfacing_comprehensive.py)** - OEM/Links surfacing demonstration
+- **demo_surfacing_comprehensive.py** - OEM/Links surfacing demonstration
   - Mock Huawei BMC simulation
   - Before/after comparison
   - Backward compatibility verification
 
-- **[example_oem_links.py](example_oem_links.py)** - OEM/Links usage examples
+- **example_oem_links.py** - OEM/Links usage examples
   - Benefits demonstration
   - Navigation pattern improvements
 
 ## 🔧 Source Files
 
-- **[rackfish.py](rackfish.py)** - Main library implementation
+Located in `../rackfish/`:
+
+- **client.py** - Main library implementation
   - `RedfishClient` class - HTTP client and session management
   - `RedfishResource` class - Dynamic resource object graph
   - Lazy loading mechanism
@@ -97,11 +136,12 @@ Complete documentation for the rackfish dynamic Redfish client library.
 
 ## 📋 Configuration Files
 
-- **[requirements.txt](requirements.txt)** - Python dependencies (only `requests`)
+- `../requirements.txt` - Python dependencies (only `requests`)
+- `../pyproject.toml` - Project configuration and metadata
 
 ## 🤖 AI Agent Instructions
 
-- **[.github/copilot-instructions.md](.github/copilot-instructions.md)** - Guidelines for AI coding agents
+- **[../.github/copilot-instructions.md](../.github/copilot-instructions.md)** - Guidelines for AI coding agents
   - Architecture details
   - Design patterns
   - Extension guidelines
@@ -109,28 +149,47 @@ Complete documentation for the rackfish dynamic Redfish client library.
 
 ## 🚀 Quick Navigation by Task
 
-### I want to...
+### Common Tasks
 
 #### Learn the basics
-→ Start with [README.md](README.md)
+
+→ Start with [../README.md](../README.md)
 
 #### See code examples
+
 → Go to [EXAMPLES.md](EXAMPLES.md)
 
 #### Find a specific use case
+
 → Check [USE_CASES.md](USE_CASES.md) index
 
 #### Understand OEM surfacing
+
 → Read [OEM_LINKS_SURFACING.md](OEM_LINKS_SURFACING.md)
 
+#### Configure SSL/TLS
+
+→ See [SSL_CONFIGURATION.md](SSL_CONFIGURATION.md)
+
+#### Understand ETag support
+
+→ Read [ETAG_SUPPORT.md](ETAG_SUPPORT.md)
+
+#### Use singular collection access
+
+→ Read [SINGULAR_COLLECTION_ACCESS.md](SINGULAR_COLLECTION_ACCESS.md)
+
 #### Run tests
+
 → See [TESTS.md](TESTS.md)
 
 #### Write real code
-→ Look at [examples_comprehensive.py](examples_comprehensive.py)
+
+→ Look at `../examples/examples_comprehensive.py`
 
 #### Understand architecture
-→ Read [.github/copilot-instructions.md](.github/copilot-instructions.md)
+
+→ Read [../.github/copilot-instructions.md](../.github/copilot-instructions.md)
 
 ## 📊 Coverage Summary
 
@@ -163,7 +222,8 @@ Complete documentation for the rackfish dynamic Redfish client library.
 
 ## 📝 Contributing
 
-See [.github/copilot-instructions.md](.github/copilot-instructions.md) for:
+See [../.github/copilot-instructions.md](../.github/copilot-instructions.md) for:
+
 - Code architecture
 - Extension guidelines
 - Design patterns
@@ -171,15 +231,16 @@ See [.github/copilot-instructions.md](.github/copilot-instructions.md) for:
 
 ## 🔗 Related Files
 
-- `import_certificate.py` - Existing certificate import utility
+- `../CHANGELOG.md` - Version history and changes
+- `../CONTRIBUTING.md` - Contribution guidelines
+- `../LICENSE` - MIT License
 - `.python-version` - Python version specification
-- `.github/` - GitHub-specific files
 
 ---
 
 **Last Updated:** October 15, 2025
 
-**Version:** 1.0.0
+**Version:** 1.0.2
 
 **Supported Python:** 3.8+
 

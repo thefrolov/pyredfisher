@@ -60,8 +60,8 @@ class MockClient:
     def post(self, path, data=None):
         return {"result": "ok", "path": path, "data": data}
 
-    def patch(self, path, data=None):
-        return {"result": "patched", "path": path, "data": data}
+    def patch(self, path, data=None, etag=None):
+        return {"result": "patched", "path": path, "data": data, "etag": etag}
 
     def delete(self, path):
         return {"result": "deleted", "path": path}

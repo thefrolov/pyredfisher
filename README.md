@@ -20,17 +20,6 @@ A lightweight, dynamic Python client for interacting with Redfish BMC (Baseboard
 - 📚 **Collection Support** - Iterate Redfish collections naturally
 - 🔐 **Flexible Auth** - Session tokens or Basic authentication
 
-## Features
-
-- **Zero Dependencies** (except `requests`) - Minimal footprint
-- **Lazy Loading** - Resources fetched on-demand for performance
-- **Dynamic Attributes** - JSON properties become Python attributes
-- **OEM Surfacing** - Vendor extensions automatically accessible
-- **Links Surfacing** - Related resources directly navigable
-- **Action Validation** - Parameter validation using ActionInfo schemas
-- **Collection Support** - Iterate Redfish collections naturally
-- **Session & Basic Auth** - Flexible authentication options
-
 ## Installation
 
 ### From PyPI (recommended)
@@ -63,8 +52,11 @@ client = RedfishClient("https://bmc.example.com", "admin", "password",
                        use_session=True, verify_ssl=False)
 root = client.connect()
 
-# Power control
-system = next(iter(client.Systems))
+# Power control - multiple ways to access systems
+system = next(iter(client.Systems))  # Traditional iteration
+system = client.Systems.Members[0]    # Direct member access
+system = client.System                # Singular form (if only one member!)
+
 system.Reset(ResetType="GracefulRestart")
 
 # Access OEM properties (auto-surfaced)
@@ -128,7 +120,8 @@ for temp in chassis.Thermal.Temperatures:
     print(f"{temp.Name}: {temp.ReadingCelsius}°C")
 ```
 
-See [EXAMPLES.md](EXAMPLES.md) for 100+ more examples covering:
+See [docs/EXAMPLES.md](docs/EXAMPLES.md) for 100+ more examples covering:
+
 - BIOS configuration
 - Certificate management
 - Virtual media (KVM)
@@ -136,24 +129,6 @@ See [EXAMPLES.md](EXAMPLES.md) for 100+ more examples covering:
 - Boot order configuration
 - SEL/log collection
 - And much more...
-
-## Testing
-
-Run the test suite:
-
-```bash
-# Install with dev dependencies
-pip install -e ".[dev]"
-
-# Run all tests
-pytest tests/
-
-# Run with coverage
-pytest --cov=rackfish tests/
-
-# Run specific test file
-pytest tests/test_common_usage.py
-```
 
 ## Project Structure
 
@@ -318,7 +293,7 @@ See LICENSE file.
 
 ## Version
 
-Current version: 1.0.0
+Current version: 1.0.2
 
 ## Requirements
 

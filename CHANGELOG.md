@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [1.0.2] - 2025-10-15
+
+### Added
+
+- Singular collection access: Access single-member collections directly (e.g., `client.System` instead of `next(iter(client.Systems))`)
+- Works at all resource hierarchy levels (client and nested resources)
+- Automatic fallback to traditional methods when collection doesn't have exactly one member
+- Comprehensive test suite for singular access (`test_singular_collection_access.py`)
+- Documentation for singular collection access feature
+- New test suite for ETag functionality (`test_etag_support.py`)
+
+### Fixed
+
+- Added ETag support for PATCH requests via If-Match header to prevent HTTP 412 errors
+- PATCH operations now automatically include ETags when available in resource metadata
+- Resources without ETags continue to work normally (backward compatible)
+- Suppressed urllib3 InsecureRequestWarning when `verify_ssl=False` is used
+
 ## [1.0.1] - 2025-10-15
 
 ### Fixed

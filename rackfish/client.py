@@ -7,6 +7,7 @@ import threading
 from typing import Any, ClassVar, Iterable
 
 import requests
+import urllib3
 
 # HTTP status codes
 HTTP_OK = 200
@@ -74,11 +75,6 @@ class RedfishClient:
         default_headers: dict[str, str] | None = None,
     ):
         base = base_url.rstrip("/")
-        # if not base.endswith("/redfish/v1"):
-        #     if base.endswith("/redfish"):
-        #         base = base + "/v1"
-        #     else:
-        #         base = base + "/redfish/v1"
 
         self.base_url = base
         self.username = username
@@ -88,6 +84,11 @@ class RedfishClient:
 
         self._http = requests.Session()
         self._http.verify = verify_ssl
+
+        # Suppress SSL warnings when verify_ssl is disabled
+        if not verify_ssl:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
         self._http.headers.update(default_headers or {"Accept": "application/json"})
         if username and password and not use_session:
             self._http.auth = (username, password)
@@ -156,9 +157,12 @@ class RedfishClient:
                 return None
         return None
 
-    def patch(self, path: str, data: dict[str, Any]) -> None:
+    def patch(self, path: str, data: dict[str, Any], etag: str | None = None) -> None:
         url = _safe_join(self.base_url, path) if not path.startswith("http") else path
-        resp = self._http.patch(url, json=data, timeout=self.timeout)
+        headers = {}
+        if etag:
+            headers["If-Match"] = etag
+        resp = self._http.patch(url, json=data, headers=headers, timeout=self.timeout)
         if resp.status_code not in (200, 204):
             raise RedfishError(f"PATCH {url} -> {resp.status_code} {resp.text}")
 
@@ -191,7 +195,27 @@ class RedfishClient:
 
     def __getattr__(self, name: str) -> Any:
         # Proxy unknown attributes to root (e.g., client.Systems)
-        return getattr(self.root, name)
+        # If attribute doesn't exist but plural form exists with single member,
+        # return that member directly (e.g., client.System -> client.Systems[0])
+        try:
+            return getattr(self.root, name)
+        except AttributeError as exc:
+            # Try plural form for singular access convenience
+            plural_name = name + "s"
+            try:
+                collection = getattr(self.root, plural_name)
+                if (
+                    hasattr(collection, "__len__")
+                    and hasattr(collection, "__iter__")
+                    and len(collection) == 1
+                ):
+                    return next(iter(collection))
+            except (AttributeError, TypeError):
+                pass
+            # Re-raise original error
+            raise AttributeError(
+                f"'{type(self).__name__}' object has no attribute '{name}'"
+            ) from exc
 
 
 # ---------------------------
@@ -383,11 +407,28 @@ class RedfishResource:
         self._ensure_fetched()
         try:
             return object.__getattribute__(self, name)
-        except AttributeError:
+        except AttributeError as exc:
             # Not an attribute; maybe a JSON property with non-identifier key
             if name in self._raw:
                 return self._raw[name]
-            raise
+
+            # Try plural form for singular access convenience
+            # e.g., resource.Chassis -> resource.Chassis[0] if len == 1
+            plural_name = name + "s"
+            try:
+                collection = object.__getattribute__(self, plural_name)
+                if (
+                    hasattr(collection, "__len__")
+                    and hasattr(collection, "__iter__")
+                    and len(collection) == 1
+                ):
+                    return next(iter(collection))
+            except (AttributeError, TypeError):
+                pass
+
+            raise AttributeError(
+                f"'{type(self).__name__}' object has no attribute '{name}'"
+            ) from exc
 
     def __setattr__(self, name: str, value: Any) -> None:
         # Allow setting simple existing properties via PATCH
@@ -400,7 +441,8 @@ class RedfishResource:
 
         if name in self._raw and not isinstance(self._raw[name], (dict, list)):
             # PATCH only simple properties by default; complex updates via .patch()
-            self._client.patch(self._path, {name: value})
+            etag = self._raw.get("@odata.etag")
+            self._client.patch(self._path, {name: value}, etag=etag)
             self._raw[name] = value
             object.__setattr__(self, name, value)
         else:
@@ -458,7 +500,9 @@ class RedfishResource:
     def patch(self, updates: dict[str, Any]) -> None:
         if not self._path:
             raise RedfishError("PATCH requires a resource path")
-        self._client.patch(self._path, updates)
+        self._ensure_fetched()
+        etag = self._raw.get("@odata.etag")
+        self._client.patch(self._path, updates, etag=etag)
         self.refresh()
 
     def delete(self) -> None:

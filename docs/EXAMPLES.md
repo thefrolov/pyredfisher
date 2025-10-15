@@ -18,6 +18,22 @@ for system in client.Systems:
     print(f"System: {system.Id} - {system.Name} - Power: {system.PowerState}")
 ```
 
+### Alternative: Singular Access for Single-Member Collections
+
+If you know there's only one system (common in 1U servers), use singular form:
+
+```python
+# Only works if Systems collection has exactly 1 member
+system = client.System
+print(f"System: {system.Id} - {system.Name} - Power: {system.PowerState}")
+
+# Traditional methods also work:
+# system = next(iter(client.Systems))
+# system = client.Systems.Members[0]
+```
+
+See [SINGULAR_COLLECTION_ACCESS.md](SINGULAR_COLLECTION_ACCESS.md) for details.
+
 ## 3. Access OEM and Links Properties (Surfaced)
 
 ```python
@@ -792,5 +808,5 @@ client.delete("/redfish/v1/SomeCollection/Item")
 **See also:**
 
 - [OEM_LINKS_SURFACING.md](OEM_LINKS_SURFACING.md) for advanced surfacing details
-- [test_common_usage.py](test_common_usage.py) for test examples
+- [../tests/test_common_usage.py](../tests/test_common_usage.py) for test examples
 

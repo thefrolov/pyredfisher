@@ -37,4 +37,4 @@ All common Redfish usage tests passed!
 - Uses a mock RedfishClient for safe, fast, and repeatable tests
 - Covers both standard and vendor-specific (OEM) Redfish extensions
 - Demonstrates the ergonomic benefits of property surfacing
-- See also: [EXAMPLES.md](EXAMPLES.md) for code walkthroughs
+- See also: [EXAMPLES.md](EXAMPLES.md) for code walkthroughs and usage patterns
